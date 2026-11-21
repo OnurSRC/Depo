@@ -1,0 +1,8 @@
+{
+  "name": "okb-okkb-video",
+  "private": true,
+  "description": "OKB ve OKKB ayırıcı tanı videosunun kaynak dosyaları (GSAP + Playwright ile kare kare render)",
+  "dependencies": {
+    "gsap": "3.12.5"
+  }
+}

@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>OKB mi OKKB mi</title>
+<style>
+:root{
+  --ink:#0C0F15; --ink2:#141923; --card:#171D28; --line:#283142;
+  --cream:#F4EFE6; --muted:#98A1B0; --dim:#5E6778;
+  --coral:#FF6A57; --coralSoft:rgba(255,106,87,.13); --coralLine:rgba(255,106,87,.45);
+  --blue:#5AA2FF; --blueSoft:rgba(90,162,255,.13); --blueLine:rgba(90,162,255,.45);
+  --amber:#F4B740; --amberSoft:rgba(244,183,64,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--ink);}
+body{font-family:"Inter",sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss03";}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+  background:radial-gradient(1400px 900px at 50% 38%, #171D29 0%, #0C0F15 72%);}
+#grain{position:absolute;inset:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");}
+.disp{font-family:"Inter Display","Inter",sans-serif;}
+.scene{position:absolute;inset:0;visibility:hidden;opacity:0;}
+.abs{position:absolute}
+.c-coral{color:var(--coral)} .c-blue{color:var(--blue)} .c-amber{color:var(--amber)} .c-muted{color:var(--muted)}
+em{font-style:normal;color:var(--cream)}
+
+/* chrome */
+#chapter{position:absolute;left:120px;top:64px;font-size:24px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:0}
+#chapter b{color:var(--cream);font-weight:700;margin-right:14px}
+#brand{position:absolute;right:120px;top:64px;font-size:22px;font-weight:600;letter-spacing:.08em;color:var(--dim)}
+#brand .c-coral,#brand .c-blue{font-weight:800}
+#progressTrack{position:absolute;left:0;right:0;bottom:0;height:6px;background:rgba(255,255,255,.05)}
+#progress{position:absolute;left:0;bottom:0;height:6px;width:1920px;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--coral),var(--amber) 50%,var(--blue));}
+
+/* shared bits */
+.pill{display:inline-block;padding:10px 22px;border-radius:999px;font-size:24px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.pill.coral{background:var(--coralSoft);color:var(--coral);border:2px solid var(--coralLine)}
+.pill.blue{background:var(--blueSoft);color:var(--blue);border:2px solid var(--blueLine)}
+.pill.amber{background:var(--amberSoft);color:var(--amber);border:2px solid rgba(244,183,64,.45)}
+.pill.neutral{background:rgba(255,255,255,.06);color:var(--cream);border:2px solid var(--line)}
+.quote{font-size:42px;line-height:1.3;font-weight:500;font-style:italic}
+.tag{font-size:26px;line-height:1.4;color:var(--muted)}
+.tag b{color:var(--cream);font-weight:700}
+
+/* ---------- S1 hook ---------- */
+#s-hook .kids{position:absolute;left:0;right:0;top:170px;display:flex;justify-content:center;gap:220px}
+.kid{position:relative;width:250px;text-align:center}
+.kid svg{width:250px;height:250px;display:block}
+.kid .age{margin-top:22px;font-size:30px;font-weight:700;letter-spacing:.06em}
+.kid.coral{color:var(--coral)} .kid.blue{color:var(--blue)}
+#s-hook .l1{left:0;right:0;top:560px;text-align:center;font-size:52px;font-weight:600}
+#s-hook .l2{left:0;right:0;top:640px;text-align:center;font-size:52px;font-weight:400;color:var(--muted)}
+#s-hook .l2 em{font-weight:700;color:var(--cream)}
+#s-hook .split{left:0;right:0;top:800px;display:flex;justify-content:center;gap:90px;font-size:56px;font-weight:800}
+#s-hook .split span{display:block}
+#s-hook .tie{position:absolute;left:50%;top:300px;width:120px;margin-left:-60px;text-align:center;font-size:40px;font-weight:800;color:var(--dim)}
+
+/* ---------- S2 title ---------- */
+#s-title .big{left:0;right:0;top:250px;text-align:center;font-size:200px;font-weight:800;letter-spacing:-.02em;line-height:1}
+#s-title .big span{display:inline-block}
+#s-title .big .mi{color:var(--dim);font-weight:600;font-size:150px}
+#s-title .sub{left:240px;right:240px;top:540px;text-align:center;font-size:44px;line-height:1.35;font-weight:500;color:var(--cream)}
+#s-title .sub b{font-weight:800}
+#s-title .rule{left:50%;top:720px;width:520px;margin-left:-260px;height:4px;border-radius:2px;
+  background:linear-gradient(90deg,var(--coral),var(--amber),var(--blue));transform-origin:50% 50%}
+#s-title .for{left:0;right:0;top:770px;text-align:center;font-size:30px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- S3 two worlds ---------- */
+#s-worlds .h{left:0;right:0;top:132px;text-align:center;font-size:40px;font-weight:600;color:var(--muted)}
+#s-worlds .word{left:0;right:0;top:186px;text-align:center;font-size:100px;font-weight:800;letter-spacing:-.01em}
+.wcard{position:absolute;top:350px;width:770px;height:555px;border-radius:28px;padding:44px 48px;background:var(--card);border:2px solid var(--line)}
+.wcard.coral{left:150px;border-color:var(--coralLine);background:linear-gradient(160deg,var(--coralSoft),rgba(23,29,40,.9) 60%)}
+.wcard.blue{right:150px;border-color:var(--blueLine);background:linear-gradient(200deg,var(--blueSoft),rgba(23,29,40,.9) 60%)}
+.wcard .ab{font-size:88px;font-weight:800;line-height:1}
+.wcard .full{margin-top:10px;font-size:30px;font-weight:600;color:var(--cream)}
+.wcard .row{margin-top:26px;font-size:27px;line-height:1.45;color:var(--muted)}
+.wcard .row b{color:var(--cream);font-weight:700}
+#s-worlds .note{left:0;right:0;top:948px;text-align:center;font-size:36px;font-weight:600}
+#s-worlds .note b{color:var(--amber)}
+
+/* ---------- S4 alarm / S5 rulebook ---------- */
+.leftcol{position:absolute;left:130px;top:170px;width:700px}
+.leftcol .icon{width:230px;height:230px;display:block}
+.leftcol .ab{margin-top:20px;font-size:150px;font-weight:800;line-height:.95;letter-spacing:-.02em}
+.leftcol .eq{font-size:62px;font-weight:700;line-height:1.1;margin-top:6px}
+.leftcol .quote{margin-top:40px;padding-left:30px;border-left:6px solid currentColor}
+.leftcol .tag{margin-top:28px}
+#s-alarm .leftcol{color:var(--coral)} #s-alarm .leftcol .quote, #s-alarm .leftcol .eq{color:var(--cream)}
+#s-rules .leftcol{color:var(--blue)} #s-rules .leftcol .quote, #s-rules .leftcol .eq{color:var(--cream)}
+
+#cycle{position:absolute;left:1010px;top:205px;width:700px;height:700px}
+.node{position:absolute;width:310px;padding:20px 24px;border-radius:22px;background:#1A202C;border:2px solid var(--line);text-align:center}
+.node .t{font-size:34px;font-weight:800}
+.node .d{margin-top:6px;font-size:23px;line-height:1.35;color:var(--muted)}
+.node.n1{left:1205px;top:180px;border-color:var(--coralLine)} .node.n1 .t{color:var(--coral)}
+.node.n2{left:1520px;top:488px}
+.node.n3{left:1205px;top:790px;border-color:var(--coralLine)} .node.n3 .t{color:var(--coral)}
+.node.n4{left:890px;top:488px}
+#cycCenter{position:absolute;left:1260px;top:520px;width:200px;text-align:center;font-size:26px;font-weight:800;letter-spacing:.2em;color:var(--dim)}
+#cycCenter span{display:block;font-size:20px;letter-spacing:.06em;font-weight:600;margin-top:8px;color:var(--muted)}
+
+.page{position:absolute;left:880px;top:160px;width:910px;height:800px;border-radius:28px;background:#161C27;border:2px solid var(--blueLine);padding:40px 48px}
+.page .ph{white-space:nowrap;display:flex;justify-content:space-between;align-items:center;font-size:24px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.page .ph span:last-child{color:var(--cream);letter-spacing:.04em;text-transform:none;font-size:28px}
+.rule{display:flex;gap:22px;align-items:baseline;margin-top:20px;font-size:30px;line-height:1.3}
+.rule i{font-style:normal;flex:0 0 44px;height:44px;border-radius:12px;background:var(--blueSoft);color:var(--blue);font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;transform:translateY(3px)}
+.rule small{color:var(--muted);font-size:24px}
+
+/* ---------- vignettes ---------- */
+.vig .who{position:absolute;left:150px;top:220px;width:380px;text-align:center}
+.vig .who svg{width:300px;height:300px}
+.vig .who .nm{margin-top:24px;font-size:72px;font-weight:800;line-height:1}
+.vig .who .ag{margin-top:10px;font-size:32px;font-weight:600;color:var(--muted)}
+.vig .list{position:absolute;left:640px;top:200px;width:1140px}
+.vig .it{display:flex;gap:26px;align-items:flex-start;margin-bottom:34px;font-size:38px;line-height:1.35}
+.vig .it .dot{flex:0 0 18px;height:18px;border-radius:50%;margin-top:18px}
+.vig .it.say{font-style:italic;font-weight:600}
+#s-ece .who, #s-ece .dot{color:var(--coral)} #s-ece .dot{background:var(--coral)}
+#s-kerem .who, #s-kerem .dot{color:var(--blue)} #s-kerem .dot{background:var(--blue)}
+.stamp{position:absolute;right:150px;bottom:120px;padding:18px 34px;border:6px solid currentColor;border-radius:18px;font-size:46px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;transform:rotate(-6deg)}
+#s-ece .stamp{color:var(--coral)} #s-kerem .stamp{color:var(--blue)}
+
+/* ---------- questions ---------- */
+#s-qintro .big{left:0;right:0;top:330px;text-align:center;font-size:130px;font-weight:800;line-height:1}
+#s-qintro .sub{left:0;right:0;top:500px;text-align:center;font-size:40px;color:var(--muted);font-weight:500}
+#s-qintro .chips{left:0;right:0;top:640px;display:flex;justify-content:center;gap:28px}
+#s-qintro .chip{padding:18px 30px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:32px;font-weight:700}
+#s-qintro .chip b{color:var(--amber);margin-right:12px}
+.qh{position:absolute;left:0;right:0;top:140px;text-align:center}
+.qh .pill{margin-bottom:26px}
+.qh .qt{font-size:104px;font-weight:800;line-height:1.02;letter-spacing:-.01em}
+.qh .qs{margin-top:22px;font-size:38px;font-style:italic;color:var(--muted);font-weight:500}
+.panel{position:absolute;top:510px;width:790px;height:360px;border-radius:28px;padding:40px 46px;background:var(--card)}
+.panel.coral{left:140px;border:2px solid var(--coralLine);background:linear-gradient(160deg,var(--coralSoft),rgba(23,29,40,.92) 65%)}
+.panel.blue{right:140px;border:2px solid var(--blueLine);background:linear-gradient(200deg,var(--blueSoft),rgba(23,29,40,.92) 65%)}
+.panel .lb{font-size:30px;font-weight:800;letter-spacing:.1em}
+.panel.coral .lb{color:var(--coral)} .panel.blue .lb{color:var(--blue)}
+.panel .an{margin-top:18px;font-size:44px;font-weight:700;line-height:1.25}
+.panel .ex{margin-top:16px;font-size:30px;line-height:1.4;color:var(--muted)}
+.vs{position:absolute;left:50%;top:670px;width:80px;margin-left:-40px;text-align:center;font-size:30px;font-weight:800;color:var(--dim)}
+.punch{position:absolute;left:140px;right:140px;top:910px;text-align:center;font-size:38px;font-weight:700;line-height:1.35}
+
+/* ---------- pitfalls ---------- */
+.pit .icon{position:absolute;left:140px;top:190px;width:170px;height:170px;color:var(--amber)}
+.pit .lab{position:absolute;left:350px;top:200px}
+.pit .tt{position:absolute;left:350px;top:262px;width:1430px;font-size:76px;font-weight:800;line-height:1.08}
+.pit .bd{position:absolute;left:350px;top:470px;width:1380px;font-size:40px;line-height:1.45;color:var(--cream)}
+.pit .bd p{margin:0 0 26px}
+.pit .bd .m{color:var(--muted)}
+.pit .src{position:absolute;left:350px;top:930px;font-size:24px;color:var(--dim)}
+.hl{color:var(--amber);font-weight:700}
+
+/* ---------- ddx ---------- */
+#s-ddx .h{left:140px;top:170px;font-size:72px;font-weight:800;line-height:1.1}
+#s-ddx .h span{color:var(--muted);font-weight:600;font-size:40px;display:block;margin-top:14px}
+#s-ddx .grid{position:absolute;left:140px;top:430px;width:1640px;display:grid;grid-template-columns:1fr 1fr;gap:26px 30px}
+.dx{padding:26px 32px;border-radius:22px;background:var(--card);border:2px solid var(--line)}
+.dx .n{font-size:34px;font-weight:800}
+.dx .k{margin-top:6px;font-size:27px;color:var(--muted);line-height:1.35}
+
+/* ---------- comorbid ---------- */
+#venn{position:absolute;left:130px;top:170px;width:760px;height:640px}
+#s-co .stats{position:absolute;left:960px;top:160px;width:820px}
+.stat{margin-bottom:28px}
+.stat .num{font-size:64px;font-weight:800;line-height:1}
+.stat .txt{margin-top:6px;font-size:29px;line-height:1.4}
+.stat .ref{margin-top:8px;font-size:22px;color:var(--dim)}
+#s-co .take{position:absolute;left:150px;right:150px;top:905px;font-size:36px;font-weight:700;line-height:1.35;text-align:center}
+
+/* ---------- treatment ---------- */
+.tcol{position:absolute;top:210px;width:790px;height:680px;border-radius:28px;padding:44px 48px;background:var(--card)}
+.tcol.coral{left:140px;border:2px solid var(--coralLine)}
+.tcol.blue{right:140px;border:2px solid var(--blueLine)}
+.tcol .lb{font-size:30px;font-weight:800;letter-spacing:.1em}
+.tcol.coral .lb{color:var(--coral)} .tcol.blue .lb{color:var(--blue)}
+.tcol .ti{margin-top:10px;font-size:56px;font-weight:800;line-height:1.1}
+.tcol .tx{display:flex;gap:20px;margin-top:32px;font-size:34px;line-height:1.38}
+.tcol .tx i{font-style:normal;flex:0 0 40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;transform:translateY(3px)}
+.tcol.coral .tx i{background:var(--coralSoft);color:var(--coral)}
+.tcol.blue .tx i{background:var(--blueSoft);color:var(--blue)}
+.tcol .tx small{display:block;color:var(--muted);font-size:26px;margin-top:6px;line-height:1.4}
+
+/* ---------- closing ---------- */
+#s-close .row{position:absolute;left:180px;width:1560px;display:flex;align-items:center;gap:56px}
+#s-close .row svg{flex:0 0 190px;width:190px;height:190px}
+#s-close .row .tx{font-size:58px;font-weight:700;line-height:1.2}
+#s-close .r1{top:170px;color:var(--coral)} #s-close .r2{top:430px;color:var(--blue)}
+#s-close .row .tx b{font-weight:900}
+#s-close .row .tx span{color:var(--cream)}
+#s-close .final{position:absolute;left:0;right:0;top:760px;text-align:center}
+#s-close .final .a{font-size:34px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+#s-close .final .b{margin-top:14px;font-size:66px;font-weight:800}
+
+/* ---------- refs ---------- */
+#s-refs .h{left:140px;top:150px;font-size:52px;font-weight:800}
+#s-refs ol{position:absolute;left:140px;top:250px;width:1640px;margin:0;padding-left:34px;font-size:23px;line-height:1.4;color:var(--muted);columns:2;column-gap:70px}
+#s-refs li{margin-bottom:12px;padding-left:8px;break-inside:avoid}
+#s-refs li b{color:var(--cream);font-weight:600}
+#s-refs .disc{position:absolute;left:140px;right:140px;top:930px;font-size:24px;color:var(--dim)}
+#fadeBlack{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="grain"></div>
+
+<!-- reusable icon symbols -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-kid" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="94" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="4"/>
+      <circle cx="100" cy="80" r="33" fill="currentColor"/>
+      <path d="M42 166 C50 133 74 118 100 118 C126 118 150 133 158 166 Q100 196 42 166Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-teen" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="94" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="4"/>
+      <circle cx="100" cy="72" r="30" fill="currentColor"/>
+      <path d="M36 172 C42 128 70 110 100 110 C130 110 158 128 164 172 Q100 198 36 172Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 200 200">
+      <g class="bellbody">
+        <rect x="90" y="20" width="20" height="22" rx="10" fill="currentColor"/>
+        <path d="M100 36c-35 0-57 27-57 63v32l-17 22h148l-17-22V99c0-36-22-63-57-63z" fill="currentColor"/>
+        <circle cx="100" cy="168" r="15" fill="currentColor"/>
+      </g>
+      <path d="M26 74 q-16 34 0 68" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M174 74 q16 34 0 68" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M8 60 q-22 48 0 96" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round" opacity=".4"/>
+      <path d="M192 60 q22 48 0 96" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round" opacity=".4"/>
+    </symbol>
+    <symbol id="i-book" viewBox="0 0 200 200">
+      <rect x="54" y="170" width="116" height="14" rx="5" fill="#E9E2D3"/>
+      <rect x="40" y="20" width="128" height="156" rx="12" fill="currentColor"/>
+      <rect x="40" y="20" width="20" height="156" rx="8" fill="#000" fill-opacity=".22"/>
+      <rect x="80" y="62" width="66" height="10" rx="5" fill="#0C0F15" fill-opacity=".5"/>
+      <rect x="80" y="84" width="66" height="10" rx="5" fill="#0C0F15" fill-opacity=".5"/>
+      <rect x="80" y="106" width="44" height="10" rx="5" fill="#0C0F15" fill-opacity=".5"/>
+      <path d="M134 20v54l11-9 11 9V20z" fill="#F4B740"/>
+    </symbol>
+    <symbol id="i-warn" viewBox="0 0 200 200">
+      <path d="M100 22 L184 170 H16 Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="12" stroke-linejoin="round"/>
+      <rect x="92" y="72" width="16" height="58" rx="8" fill="currentColor"/>
+      <circle cx="100" cy="150" r="10" fill="currentColor"/>
+    </symbol>
+    <marker id="arrowC" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#FF6A57"/>
+    </marker>
+  </defs>
+</svg>
+
+<!-- S1 HOOK -->
+<section class="scene" id="s-hook">
+  <div class="kids">
+    <div class="kid coral" id="kidA"><svg><use href="#i-kid"/></svg><div class="age">9 yaş</div></div>
+    <div class="kid blue" id="kidB"><svg><use href="#i-teen"/></svg><div class="age">16 yaş</div></div>
+  </div>
+  <div class="abs l1">Polikliniğe iki genç hasta geliyor.</div>
+  <div class="abs l2">Aileler ikisi için de aynı cümleyi kuruyor: <em>“Çok takıntılı.”</em></div>
+  <div class="abs split"><span class="c-coral sA">Biri bir ALARM ile yaşıyor.</span><span class="c-blue sB">Diğeri bir KURAL KİTABI ile.</span></div>
+</section>
+
+<!-- S2 TITLE -->
+<section class="scene" id="s-title">
+  <div class="abs big disp"><span class="c-coral w1">OKB</span> <span class="mi w2">mi,</span> <span class="c-blue w3">OKKB</span> <span class="mi w4">mi?</span></div>
+  <div class="abs sub"><b class="c-coral">Obsesif kompulsif bozukluk</b> ile <b class="c-blue">obsesif kompulsif kişilik bozukluğunu</b> ayırmanın akılda kalıcı yolu</div>
+  <div class="abs rule"></div>
+  <div class="abs for">Çocuk ve ergen psikiyatristleri için · 5 dakikalık ayırıcı tanı rehberi</div>
+</section>
+
+<!-- S3 TWO WORLDS -->
+<section class="scene" id="s-worlds">
+  <div class="abs h">Aynı sıfat, iki ayrı dünya</div>
+  <div class="abs word disp">obsesif-kompulsif</div>
+  <div class="wcard coral">
+    <div class="ab disp c-coral">OKB</div>
+    <div class="full">Obsesif kompulsif bozukluk</div>
+    <div class="row">DSM-5-TR bölümü: <b>Obsesif-Kompulsif ve İlişkili Bozukluklar</b></div>
+    <div class="row">Çekirdek: <b>obsesyonlar ve/veya kompulsiyonlar</b></div>
+    <div class="row">Sıklık: çocuk-ergende <b>%0,25–4</b>; başlangıç yaşı iki tepeli <b>(~11 ve ~23 yaş)</b></div>
+  </div>
+  <div class="wcard blue">
+    <div class="ab disp c-blue">OKKB</div>
+    <div class="full">Obsesif kompulsif kişilik bozukluğu</div>
+    <div class="row">DSM-5-TR bölümü: <b>Kişilik Bozuklukları · C kümesi</b></div>
+    <div class="row">Çekirdek: <b>düzen, mükemmeliyetçilik ve kontrol örüntüsü</b></div>
+    <div class="row">Sıklık: erişkin toplumda <b>~%2–8</b> (meta-analiz ~%4); <b>toplumda en sık kişilik bozukluğu</b></div>
+  </div>
+  <div class="abs note"><b>Dikkat:</b> OKKB tanısı için obsesyon ya da kompulsiyon gerekmez.</div>
+</section>
+
+<!-- S4 ALARM -->
+<section class="scene" id="s-alarm">
+  <div class="leftcol">
+    <svg class="icon" id="bell"><use href="#i-bell"/></svg>
+    <div class="ab disp">OKB</div>
+    <div class="eq">= yanlış alarm</div>
+    <div class="quote">“Bunu düşünmek istemiyorum… ama yapmazsam kötü bir şey olacak.”</div>
+    <div class="tag"><b>Ego-distonik:</b> düşünce yabancı ve istenmeyen yaşanır.*<br>*Çocuklarda içgörü sınırlı olabilir → Tuzak 1</div>
+  </div>
+  <svg id="cycle" viewBox="0 0 700 700">
+    <circle id="cycRing" cx="350" cy="350" r="270" fill="none" stroke="#FF6A57" stroke-opacity=".55" stroke-width="5" stroke-dasharray="1697" stroke-dashoffset="1697" transform="rotate(-90 350 350)"/>
+    <g id="cycArrows" fill="#FF6A57">
+      <path d="M0 -13 L22 0 L0 13 z" transform="translate(541 159) rotate(45)"/>
+      <path d="M0 -13 L22 0 L0 13 z" transform="translate(541 541) rotate(135)"/>
+      <path d="M0 -13 L22 0 L0 13 z" transform="translate(159 541) rotate(225)"/>
+      <path d="M0 -13 L22 0 L0 13 z" transform="translate(159 159) rotate(315)"/>
+    </g>
+    <g id="cycDot"><circle cx="350" cy="80" r="13" fill="#FFD2CB"/><circle cx="350" cy="80" r="26" fill="#FF6A57" fill-opacity=".25"/></g>
+  </svg>
+  <div id="cycCenter">DÖNGÜ<span>her turda güçlenir</span></div>
+  <div class="node n1"><div class="t">Obsesyon</div><div class="d">istenmeyen, araya giren düşünce, imge ya da dürtü</div></div>
+  <div class="node n2"><div class="t">Sıkıntı</div><div class="d">kaygı, tiksinti ya da “tam olmadı” hissi</div></div>
+  <div class="node n3"><div class="t">Kompulsiyon</div><div class="d">alarmı susturmak için ritüel (görünür ya da zihinsel)</div></div>
+  <div class="node n4"><div class="t">Kısa rahatlama</div><div class="d">alarm susar… ama beyin ritüelin “işe yaradığını” öğrenir</div></div>
+</section>
+
+<!-- S5 RULEBOOK -->
+<section class="scene" id="s-rules">
+  <div class="leftcol">
+    <svg class="icon" id="book"><use href="#i-book"/></svg>
+    <div class="ab disp">OKKB</div>
+    <div class="eq">= kural kitabı</div>
+    <div class="quote">“Doğrusu bu. Herkes böyle yapmalı.”</div>
+    <div class="tag"><b>Ego-sintonik:</b> kişi kurallarını doğru ve haklı bulur. Sıkıntı çoğu zaman başkaları kurala uymadığında doğar.</div>
+  </div>
+  <div class="page">
+    <div class="ph"><span>İçindekiler</span><span>DSM-5-TR · 8 ölçütten ≥4</span></div>
+    <div class="rule"><i>1</i><div>Ayrıntı, kural, liste ve düzene boğulma <small>— asıl amaç kaybolur</small></div></div>
+    <div class="rule"><i>2</i><div>İşin bitmesini engelleyen mükemmeliyetçilik</div></div>
+    <div class="rule"><i>3</i><div>Boş zamanı ve arkadaşlığı dışlayan aşırı çalışkanlık</div></div>
+    <div class="rule"><i>4</i><div>Ahlak ve değerlerde aşırı titizlik, esneksizlik</div></div>
+    <div class="rule"><i>5</i><div>Duygusal değeri olmayan, yıpranmış eşyaları atamama</div></div>
+    <div class="rule"><i>6</i><div>Kendi yöntemine uyulmadıkça görev devredememe</div></div>
+    <div class="rule"><i>7</i><div>Harcamada cimrilik</div></div>
+    <div class="rule"><i>8</i><div>Katılık ve inatçılık</div></div>
+  </div>
+</section>
+
+<!-- S6 ECE -->
+<section class="scene vig" id="s-ece">
+  <div class="who"><svg><use href="#i-kid"/></svg><div class="nm disp">Ece</div><div class="ag">9 yaş · kurgusal vaka</div></div>
+  <div class="list">
+    <div class="it"><span class="dot"></span><div>“Annem hastalanacak” düşüncesi aklından çıkmıyor.</div></div>
+    <div class="it"><span class="dot"></span><div>Günde onlarca kez el yıkıyor; elleri tahriş olmuş.</div></div>
+    <div class="it"><span class="dot"></span><div>Yatmadan önce annesinden aynı güvenceyi defalarca istiyor; annesi her seferinde veriyor.</div></div>
+    <div class="it say"><span class="dot"></span><div>Ağlayarak: “Durmak istiyorum ama duramıyorum.”</div></div>
+  </div>
+  <div class="stamp">Alarm → OKB</div>
+</section>
+
+<!-- S7 KEREM -->
+<section class="scene vig" id="s-kerem">
+  <div class="who"><svg><use href="#i-teen"/></svg><div class="nm disp">Kerem</div><div class="ag">16 yaş · kurgusal vaka</div></div>
+  <div class="list">
+    <div class="it"><span class="dot"></span><div>Ödevleri “kusursuz” olana dek baştan yazıyor; teslim tarihlerini kaçırıyor.</div></div>
+    <div class="it"><span class="dot"></span><div>Grup projesinde görev paylaşmıyor: “Onlar doğru yapamaz.”</div></div>
+    <div class="it"><span class="dot"></span><div>Okulda, evde, oyunda aynı katılık — en az iki yıldır.</div></div>
+    <div class="it say"><span class="dot"></span><div>Ona göre sorun kendisinde değil: “Başkaları özensiz.”</div></div>
+  </div>
+  <div class="stamp">Kural kitabı → OKKB örüntüsü</div>
+</section>
+
+<!-- S8 Q INTRO -->
+<section class="scene" id="s-qintro">
+  <div class="abs big disp">Muayenede 4 soru</div>
+  <div class="abs sub">Ayrımı çoğu zaman tek bir ölçüt değil, bu dördünün toplamı yapar.</div>
+  <div class="abs chips">
+    <div class="chip"><b>1</b>Kime ait?</div>
+    <div class="chip"><b>2</b>Yapmazsan ne olur?</div>
+    <div class="chip"><b>3</b>Kim zorlanıyor?</div>
+    <div class="chip"><b>4</b>Ne kadar yaygın?</div>
+  </div>
+</section>
+
+<!-- Q1 -->
+<section class="scene qs" id="s-q1">
+  <div class="qh"><span class="pill amber">Soru 1 / 4</span><div class="qt disp">Kime ait?</div><div class="qs">“Bu düşünce senin mi, yoksa kafana zorla mı giriyor?”</div></div>
+  <div class="panel coral"><div class="lb">OKB</div><div class="an">Yabancı, istenmeyen, araya giren</div><div class="ex">“Keşke aklıma gelmese.” Çocuk düşünceyi itmeye, bastırmaya çalışır.</div></div>
+  <div class="vs">vs</div>
+  <div class="panel blue"><div class="lb">OKKB</div><div class="an">Benimsenmiş, “doğru” olan</div><div class="ex">“Böyle olması gerekiyor.” Kurallar kişiliğin bir parçasıdır.</div></div>
+</section>
+
+<!-- Q2 -->
+<section class="scene qs" id="s-q2">
+  <div class="qh"><span class="pill amber">Soru 2 / 4</span><div class="qt disp">Yapmazsan ne olur?</div><div class="qs">Ritüelin ya da kuralın işlevini sor.</div></div>
+  <div class="panel coral"><div class="lb">OKB</div><div class="an">Felaket olur ya da “tam oturmaz”</div><div class="ex">Yoğun kaygı ve gerginlik. Ritüel bu duyguyu nötralize etmek için yapılır.</div></div>
+  <div class="vs">vs</div>
+  <div class="panel blue"><div class="lb">OKKB</div><div class="an">İş yanlış ya da eksik olur</div><div class="ex">Hoşnutsuzluk, öfke, eleştiri. Amaç kaygıyı dindirmek değil, standardı korumak.</div></div>
+</section>
+
+<!-- Q3 -->
+<section class="scene qs" id="s-q3">
+  <div class="qh"><span class="pill amber">Soru 3 / 4</span><div class="qt disp">Kim zorlanıyor?</div><div class="qs">Sıkıntının adresini bul.</div></div>
+  <div class="panel coral"><div class="lb">OKB</div><div class="an">Çoğu zaman çocuğun kendisi</div><div class="ex">Belirtiyi saklayabilir; aile ise ritüellere farkında olmadan katılır.</div></div>
+  <div class="vs">vs</div>
+  <div class="panel blue"><div class="lb">OKKB</div><div class="an">Çoğu zaman çevresi</div><div class="ex">Aile, öğretmen, arkadaşlar: “Onunla bir şey yapmak çok zor.”</div></div>
+  <div class="punch">OKB’de çocuk <span class="c-coral">belirtiyle</span> savaşır. OKKB’de çevre, çocuğun <span class="c-blue">kurallarıyla</span>.</div>
+</section>
+
+<!-- Q4 -->
+<section class="scene qs" id="s-q4">
+  <div class="qh"><span class="pill amber">Soru 4 / 4</span><div class="qt disp">Ne kadar yaygın, ne zamandır?</div><div class="qs">Belirti mi, yaşam tarzı mı?</div></div>
+  <div class="panel coral"><div class="lb">OKB</div><div class="an">Belirli tetikleyiciler, belirli ritüeller</div><div class="ex">Dalgalı seyir. Zaman alır (ör. günde &gt;1 saat) ya da belirgin sıkıntı ve işlev kaybı yaratır.</div></div>
+  <div class="vs">vs</div>
+  <div class="panel blue"><div class="lb">OKKB</div><div class="an">Her alana yayılmış, kalıcı bir tarz</div><div class="ex">Okul, ev, ilişkiler, oyun. 18 yaş altında örüntü en az 1 yıldır sürmeli (DSM-5-TR).</div></div>
+</section>
+
+<!-- PITFALL 1 -->
+<section class="scene pit" id="s-p1">
+  <svg class="icon"><use href="#i-warn"/></svg>
+  <div class="lab"><span class="pill amber">Tuzak 1 · İçgörü</span></div>
+  <div class="tt disp">“Bence bu gerekli” demesi OKB’yi dışlamaz.</div>
+  <div class="bd">
+    <p>Pediatrik OKB’de içgörü geniş bir yelpazede değişir; çok merkezli bir çalışmada (n=852) gençlerin <span class="hl">yaklaşık %11’inde zayıf ya da yoktu</span> ve yaş küçüldükçe içgörü azalıyordu.</p>
+    <p class="m">Ego-distoniyi tek başına ayırt edici sayma. Ritüelin işlevine (Soru 2) ve sıkıntının kime ait olduğuna (Soru 3) bak.</p>
+  </div>
+  <div class="src" id="src-p1">Selles ve ark., 2018 · Lewin ve ark., 2010 · DSM-5-TR içgörü belirleyicisi: iyi/orta · zayıf · yok/sanrısal</div>
+</section>
+
+<!-- PITFALL 2 -->
+<section class="scene pit" id="s-p2">
+  <svg class="icon"><use href="#i-warn"/></svg>
+  <div class="lab"><span class="pill amber">Tuzak 2 · “Tam oturmama”</span></div>
+  <div class="tt disp">Simetri ve düzen OKB’si mükemmeliyetçilik kılığına girer.</div>
+  <div class="bd">
+    <p>İpucu: <span class="hl">ritüelleşmiş</span> ve tekrarlayıcı, belirli tetikleyicilere bağlı; bölündüğünde <span class="hl">yoğun sıkıntı</span>, “baştan başla” ihtiyacı.</p>
+    <p class="m">OKKB’de düzen ise bir verimlilik iddiasıdır: “Böylesi daha doğru” — oysa çoğu zaman işi yavaşlatır.</p>
+  </div>
+  <div class="src">“Not just right” deneyimleri ve tamamlanmamışlık hissi OKB’nin kaygı dışı motorudur.</div>
+</section>
+
+<!-- PITFALL 3 -->
+<section class="scene pit" id="s-p3">
+  <svg class="icon"><use href="#i-warn"/></svg>
+  <div class="lab"><span class="pill amber">Tuzak 3 · Gelişim</span></div>
+  <div class="tt disp">Her ritüel hastalık, her katılık kişilik bozukluğu değildir.</div>
+  <div class="bd">
+    <p>“Tam böyle olsun” ritüelleri okul öncesinde <span class="hl">normaldir</span>: 2–4 yaşta zirve yapar, 4 yaştan sonra azalır — Türk çocuklarında da aynı örüntü.</p>
+    <p class="m">Kişilik hâlâ gelişiyor: ergende OKKB tanısını temkinle koy; çoğu zaman “OKKB özellikleri” demek daha doğrudur. ICD-11 bu alanı “anankastia” özellik boyutu olarak ele alır.</p>
+  </div>
+  <div class="src" id="src-p3">Evans ve ark., 1997 (n=1.492) · Çevikaslan ve ark., 2014 (Türkiye, n=1.204) · DSM-5-TR · ICD-11</div>
+</section>
+
+<!-- DDX -->
+<section class="scene" id="s-ddx">
+  <div class="abs h disp">Ayırıcı tanı listesi iki satır değil<span>Katılık, tekrar ve düzen başka tablolarda da karşına çıkar.</span></div>
+  <div class="grid">
+    <div class="dx"><div class="n">Otizm spektrum bozukluğu</div><div class="k">Aynılıkta ısrar, kısıtlı ilgiler — davranış çoğu zaman haz ya da düzenleme işlevi görür; sosyal iletişim farklılıkları eşlik eder</div></div>
+    <div class="dx"><div class="n">Tik bozuklukları</div><div class="k">“Tam oturana kadar” tekrarlama; OKB ile sık birlikte görülür</div></div>
+    <div class="dx"><div class="n">Yaygın anksiyete bozukluğu</div><div class="k">Gerçek yaşam kaygıları, ruminasyon; tipik ritüel yok</div></div>
+    <div class="dx"><div class="n">Yeme bozuklukları · İstifleme bozukluğu</div><div class="k">Beden/yemek odaklı ritüeller; eşya biriktirme ve atamama</div></div>
+  </div>
+</section>
+
+<!-- COMORBID -->
+<section class="scene" id="s-co">
+  <svg id="venn" viewBox="0 0 760 640">
+    <circle class="vc1" cx="260" cy="320" r="230" fill="#FF6A57" fill-opacity=".16" stroke="#FF6A57" stroke-width="4"/>
+    <circle class="vc2" cx="500" cy="320" r="230" fill="#5AA2FF" fill-opacity=".16" stroke="#5AA2FF" stroke-width="4"/>
+    <text class="vt1" x="148" y="340" text-anchor="middle" font-family="Inter Display, Inter" font-size="58" font-weight="800" fill="#FF6A57">OKB</text>
+    <text class="vt2" x="618" y="340" text-anchor="middle" font-family="Inter Display, Inter" font-size="58" font-weight="800" fill="#5AA2FF">OKKB</text>
+    <text class="vt3" x="380" y="312" text-anchor="middle" font-family="Inter" font-size="30" font-weight="800" fill="#F4EFE6">ikisi</text>
+    <text class="vt3" x="380" y="350" text-anchor="middle" font-family="Inter" font-size="30" font-weight="800" fill="#F4EFE6">birlikte</text>
+  </svg>
+  <div class="stats">
+    <div class="stat st1"><div class="num c-amber">~%25</div><div class="txt">OKB’li bireylerin yaklaşık dörtte birinde OKKB de saptanır.</div><div class="ref">Pozza ve ark., 2021 · 34 çalışmanın meta-analizi</div></div>
+    <div class="stat st2"><div class="num c-amber">Ebeveyn</div><div class="txt">OKB’li çocukların ebeveynlerinde OKKB, sağlıklı kontrollere göre daha sık bulunmuştur.</div><div class="ref">Calvo ve ark., 2009 · 63’e 63 ebeveyn; küçük örneklem</div></div>
+    <div class="stat st3"><div class="num c-amber">r ≈ 0,42</div><div class="txt">Aile uyumu (güvence verme, ritüele katılma) yaygındır, OKB şiddetiyle ilişkilidir ve tedavi yanıtını zayıflatır.</div><div class="ref">Peris ve ark., 2008 · Wu ve ark., 2016 (meta-analiz) · Garcia ve ark., 2010</div></div>
+  </div>
+  <div class="take">Değerlendirmeye aileyi de al: aile uyumu alarmı besler; ebeveynin kural kitabı da tabloya eşlik edebilir.</div>
+</section>
+
+<!-- TREATMENT -->
+<section class="scene" id="s-tx">
+  <div class="tcol coral">
+    <div class="lb">OKB</div>
+    <div class="ti">Alarmı yeniden ayarla</div>
+    <div class="tx"><i>1</i><div>Maruz bırakma ve tepki önleme (ERP) içeren BDT<small>Hafif-orta olguda birinci basamak</small></div></div>
+    <div class="tx"><i>2</i><div>Orta-ağır olguda SSRI eklenmesi<small id="tx-pots">POTS: kombinasyon belirtileri en çok azalttı; remisyonda tek başına BDT’den farkı anlamlı değildi</small></div></div>
+    <div class="tx"><i>3</i><div>Aile uyum davranışlarını azaltmak<small>Güvence vermek, ritüele katılmak döngüyü besler</small></div></div>
+  </div>
+  <div class="tcol blue">
+    <div class="lb">OKKB özellikleri</div>
+    <div class="ti">Kitabı esnet</div>
+    <div class="tx"><i>1</i><div>Esneklik ve mükemmeliyetçilik odaklı BDT<small>En çok desteklenen yaklaşım; veriler büyük ölçüde erişkinlerden</small></div></div>
+    <div class="tx"><i>2</i><div>Aile ve okulla ortak, gerçekçi standartlar</div></div>
+    <div class="tx"><i>3</i><div>Kanıt tabanı ince<small id="tx-ocpd">Sistematik derlemede yalnızca 2 küçük ilaç RCT’si; kesinlik çok düşük</small></div></div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="scene" id="s-close">
+  <div class="row r1"><svg id="bell2"><use href="#i-bell"/></svg><div class="tx"><b>OKB bir alarmdır.</b><br><span>Çocuk onu susturmak ister.</span></div></div>
+  <div class="row r2"><svg><use href="#i-book"/></svg><div class="tx"><b>OKKB bir kural kitabıdır.</b><br><span>Çocuk herkesin onu okumasını ister.</span></div></div>
+  <div class="final"><div class="a">Takıldığında kendine sor:</div><div class="b disp"><span class="c-coral">Alarm</span> mı, <span class="c-blue">kural kitabı</span> mı?</div></div>
+</section>
+
+<!-- REFS -->
+<section class="scene" id="s-refs">
+  <div class="abs h disp">Kaynaklar</div>
+  <ol id="reflist">
+    <li><b>American Psychiatric Association.</b> DSM-5-TR. 2022.</li>
+    <li><b>World Health Organization.</b> ICD-11: 6D10–6D11, kişilik bozukluğu ve özellik alanları. 2022.</li>
+    <li><b>POTS Team.</b> JAMA. 2004. PMID 15507582</li>
+    <li><b>Krebs G, Heyman I.</b> Arch Dis Child. 2015. PMID 25398447</li>
+    <li><b>Heyman I ve ark.</b> Br J Psychiatry. 2001. PMID 11581112</li>
+    <li><b>Taylor S.</b> Clin Psychol Rev. 2011. PMID 21820387</li>
+    <li><b>Selles RR ve ark.</b> J Am Acad Child Adolesc Psychiatry. 2018. PMID 30071984</li>
+    <li><b>Lewin AB ve ark.</b> J Child Psychol Psychiatry. 2010. PMID 20039994</li>
+    <li><b>Evans DW ve ark.</b> Child Dev. 1997. PMID 9084125</li>
+    <li><b>Çevikaslan A ve ark.</b> Child Psychiatry Hum Dev. 2014. PMID 24242356</li>
+    <li><b>Peris TS ve ark.</b> J Am Acad Child Adolesc Psychiatry. 2008. PMID 18724255</li>
+    <li><b>Wu MS ve ark.</b> Clin Psychol Rev. 2016. PMID 27019367</li>
+    <li><b>Garcia AM ve ark.</b> J Am Acad Child Adolesc Psychiatry. 2010. PMID 20855047</li>
+    <li><b>Pozza A ve ark.</b> Harv Rev Psychiatry. 2021. PMID 33666394</li>
+    <li><b>Calvo R ve ark.</b> Eur Psychiatry. 2009. PMID 19118984</li>
+    <li><b>Volkert J ve ark.</b> Br J Psychiatry. 2018. PMID 30261937</li>
+    <li><b>Grant BF ve ark.</b> J Clin Psychiatry. 2004. PMID 15291684</li>
+    <li><b>Gecaite-Stonciene J ve ark.</b> Expert Opin Pharmacother. 2022. PMID 35818708</li>
+    <li><b>Diedrich A, Voderholzer U.</b> Curr Psychiatry Rep. 2015. PMID 25617042</li>
+  </ol>
+  <div class="disc">Eğitim amaçlıdır; klinik değerlendirmenin yerini tutmaz. Vakalar kurgusaldır.</div>
+</section>
+
+<div id="chapter"></div>
+<div id="brand"><span class="c-coral">OKB</span> × <span class="c-blue">OKKB</span></div>
+<div id="progressTrack"><div id="progress"></div></div>
+<div id="fadeBlack"></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+const SCENES = [
+  {id:'s-hook',   d:12, ch:''},
+  {id:'s-title',  d:8,  ch:''},
+  {id:'s-worlds', d:15, ch:'01|Temel ayrım'},
+  {id:'s-alarm',  d:24, ch:'02|İki metafor'},
+  {id:'s-rules',  d:24, ch:'02|İki metafor'},
+  {id:'s-ece',    d:19, ch:'03|İki vaka'},
+  {id:'s-kerem',  d:19, ch:'03|İki vaka'},
+  {id:'s-qintro', d:7,  ch:'04|Muayenede 4 soru'},
+  {id:'s-q1',     d:14, ch:'04|Muayenede 4 soru'},
+  {id:'s-q2',     d:14, ch:'04|Muayenede 4 soru'},
+  {id:'s-q3',     d:15, ch:'04|Muayenede 4 soru'},
+  {id:'s-q4',     d:15, ch:'04|Muayenede 4 soru'},
+  {id:'s-p1',     d:15, ch:'05|Çocuk psikiyatrisine özgü tuzaklar'},
+  {id:'s-p2',     d:16, ch:'05|Çocuk psikiyatrisine özgü tuzaklar'},
+  {id:'s-p3',     d:16, ch:'05|Çocuk psikiyatrisine özgü tuzaklar'},
+  {id:'s-ddx',    d:13, ch:'05|Çocuk psikiyatrisine özgü tuzaklar'},
+  {id:'s-co',     d:21, ch:'06|Birliktelik ve aile'},
+  {id:'s-tx',     d:20, ch:'07|Tedavi'},
+  {id:'s-close',  d:16, ch:'★|Akılda kalsın'},
+  {id:'s-refs',   d:12, ch:''},
+];
+let acc = 0; SCENES.forEach(s => { s.start = acc; acc += s.d; });
+const TOTAL = acc;
+window.__TOTAL = TOTAL;
+window.__SCENES = SCENES.map(s => ({id:s.id, start:s.start, d:s.d}));
+
+gsap.ticker.lagSmoothing(0);
+const tl = gsap.timeline({paused:true});
+const E = 'power3.out';
+const up   = (sel, at, o={}) => tl.from(sel, Object.assign({autoAlpha:0, y:36, duration:.8, ease:E}, o), at);
+const pop  = (sel, at, o={}) => tl.from(sel, Object.assign({autoAlpha:0, scale:.6, duration:.8, ease:'back.out(1.7)'}, o), at);
+const left = (sel, at, o={}) => tl.from(sel, Object.assign({autoAlpha:0, x:-60, duration:.8, ease:E}, o), at);
+const right= (sel, at, o={}) => tl.from(sel, Object.assign({autoAlpha:0, x:60, duration:.8, ease:E}, o), at);
+const dim  = (sel, at, o={}) => tl.to(sel, Object.assign({opacity:.28, duration:.6, ease:'power1.out'}, o), at);
+
+const BUILD = {
+  's-hook'(t){
+    pop('#kidA', t+.3); pop('#kidB', t+.6);
+    up('#s-hook .l1', t+1.4);
+    up('#s-hook .l2', t+3.6);
+    dim(['#s-hook .l1','#s-hook .l2'], t+7.2, {opacity:.35});
+    up('#s-hook .sA', t+7.4); up('#s-hook .sB', t+9.2);
+    tl.to('#kidA', {y:-10, duration:.12, repeat:5, yoyo:true, ease:'sine.inOut'}, t+7.6);
+    tl.to('#kidB', {rotation:0, scale:1.06, duration:.5, ease:'power2.out'}, t+9.4);
+  },
+  's-title'(t){
+    up('#s-title .w1', t+.2, {y:60}); up('#s-title .w2', t+.45); up('#s-title .w3', t+.7, {y:60}); up('#s-title .w4', t+.95);
+    up('#s-title .sub', t+1.8);
+    tl.from('#s-title .rule', {scaleX:0, duration:1, ease:E}, t+2.6);
+    up('#s-title .for', t+3.0);
+  },
+  's-worlds'(t){
+    up('#s-worlds .h', t+.2); up('#s-worlds .word', t+.6, {scale:.9});
+    left('#s-worlds .wcard.coral', t+2.2); right('#s-worlds .wcard.blue', t+2.6);
+    up('#s-worlds .wcard.coral .row', t+3.2, {stagger:.6}); up('#s-worlds .wcard.blue .row', t+3.5, {stagger:.6});
+    up('#s-worlds .note', t+8.5);
+    tl.from('#s-worlds .note b', {color:'#F4EFE6', duration:.6}, t+8.7);
+  },
+  's-alarm'(t){
+    pop('#bell', t+.2);
+    tl.fromTo('#bell', {rotation:0}, {rotation:12, duration:.09, repeat:13, yoyo:true, ease:'sine.inOut', transformOrigin:'50% 10%'}, t+.9);
+    tl.to('#bell', {rotation:0, duration:.2}, t+2.2);
+    up('#s-alarm .ab', t+.6); up('#s-alarm .eq', t+1.0);
+    tl.to('#cycRing', {attr:{'stroke-dashoffset':0}, duration:2.2, ease:'power2.inOut'}, t+1.6);
+    up('#s-alarm .n1', t+2.0); up('#s-alarm .n2', t+3.6); up('#s-alarm .n3', t+5.2); up('#s-alarm .n4', t+6.8);
+    tl.from('#cycArrows path', {autoAlpha:0, duration:.4, stagger:1.6}, t+3.0);
+    up('#cycCenter', t+8.2);
+    tl.from('#cycDot', {autoAlpha:0, duration:.5}, t+8.0);
+    tl.fromTo('#cycDot', {rotation:0}, {rotation:1080, duration:15.5, ease:'none', svgOrigin:'350 350'}, t+8.0);
+    up('#s-alarm .quote', t+10.5); up('#s-alarm .tag', t+14.5);
+  },
+  's-rules'(t){
+    pop('#book', t+.2);
+    tl.from('#book', {rotation:-14, duration:1, ease:E}, t+.2);
+    up('#s-rules .ab', t+.6); up('#s-rules .eq', t+1.0);
+    right('#s-rules .page', t+1.6);
+    up('#s-rules .ph', t+2.2);
+    up('#s-rules .rule', t+2.8, {stagger:.75, y:20, duration:.6});
+    up('#s-rules .quote', t+10.2); up('#s-rules .tag', t+14.0);
+  },
+  's-ece'(t){
+    pop('#s-ece .who svg', t+.2); up('#s-ece .nm', t+.6); up('#s-ece .ag', t+.9);
+    up('#s-ece .it', t+1.6, {stagger:3.0, x:30, y:0});
+    tl.from('#s-ece .stamp', {autoAlpha:0, scale:2.4, rotation:-20, duration:.45, ease:'power4.in'}, t+14.0);
+  },
+  's-kerem'(t){
+    pop('#s-kerem .who svg', t+.2); up('#s-kerem .nm', t+.6); up('#s-kerem .ag', t+.9);
+    up('#s-kerem .it', t+1.6, {stagger:3.0, x:30, y:0});
+    tl.from('#s-kerem .stamp', {autoAlpha:0, scale:2.4, rotation:-20, duration:.45, ease:'power4.in'}, t+14.0);
+  },
+  's-qintro'(t){
+    up('#s-qintro .big', t+.2, {scale:.92}); up('#s-qintro .sub', t+1.0);
+    up('#s-qintro .chip', t+1.8, {stagger:.35});
+  },
+  's-q1'(t){ qScene('#s-q1', t); },
+  's-q2'(t){ qScene('#s-q2', t); },
+  's-q3'(t){ qScene('#s-q3', t); up('#s-q3 .punch', t+9.5); },
+  's-q4'(t){ qScene('#s-q4', t); },
+  's-p1'(t){ pitScene('#s-p1', t); },
+  's-p2'(t){ pitScene('#s-p2', t); },
+  's-p3'(t){ pitScene('#s-p3', t); },
+  's-ddx'(t){
+    up('#s-ddx .h', t+.2);
+    up('#s-ddx .dx', t+1.4, {stagger:.6, scale:.96});
+  },
+  's-co'(t){
+    left('#venn .vc1', t+.3, {x:-120}); right('#venn .vc2', t+.3, {x:120});
+    up('#venn .vt1', t+1.0); up('#venn .vt2', t+1.0); up('#venn .vt3', t+1.6, {stagger:.15});
+    up('#s-co .st1', t+2.2); up('#s-co .st2', t+5.4); up('#s-co .st3', t+8.6);
+    up('#s-co .take', t+12.8);
+  },
+  's-tx'(t){
+    left('#s-tx .tcol.coral', t+.2); right('#s-tx .tcol.blue', t+.5);
+    up('#s-tx .tcol.coral .tx', t+1.4, {stagger:2.0, x:20, y:0});
+    up('#s-tx .tcol.blue .tx', t+7.6, {stagger:2.0, x:20, y:0});
+  },
+  's-close'(t){
+    left('#s-close .r1', t+.3);
+    tl.fromTo('#bell2', {rotation:0}, {rotation:10, duration:.09, repeat:9, yoyo:true, ease:'sine.inOut', transformOrigin:'50% 10%'}, t+1.0);
+    left('#s-close .r2', t+3.2);
+    tl.from('#s-close .r2 svg', {rotation:-14, duration:.9, ease:E}, t+3.2);
+    up('#s-close .final .a', t+7.0); up('#s-close .final .b', t+7.8, {scale:.92});
+  },
+  's-refs'(t){
+    up('#s-refs .h', t+.2); up('#s-refs li', t+.8, {stagger:.12, y:16, duration:.5}); up('#s-refs .disc', t+2.6);
+  },
+};
+function qScene(id, t){
+  up(id+' .pill', t+.2); up(id+' .qt', t+.45, {scale:.94}); up(id+' .qs', t+1.2);
+  left(id+' .panel.coral', t+2.8); up(id+' .panel.coral .an', t+3.2); up(id+' .panel.coral .ex', t+3.8);
+  up(id+' .vs', t+5.2);
+  right(id+' .panel.blue', t+5.6); up(id+' .panel.blue .an', t+6.0); up(id+' .panel.blue .ex', t+6.6);
+}
+function pitScene(id, t){
+  pop(id+' .icon', t+.2);
+  tl.fromTo(id+' .icon', {rotation:0}, {rotation:6, duration:.08, repeat:7, yoyo:true, ease:'sine.inOut', transformOrigin:'50% 80%'}, t+.9);
+  up(id+' .lab', t+.4); up(id+' .tt', t+.8);
+  up(id+' .bd p', t+3.6, {stagger:3.4}); up(id+' .src', t+8.0);
+}
+
+SCENES.forEach((s, i) => {
+  const el = document.getElementById(s.id);
+  tl.set(el, {autoAlpha:1}, s.start);
+  BUILD[s.id](s.start);
+  if (i < SCENES.length - 1) {
+    tl.to(el, {autoAlpha:0, duration:.55, ease:'power1.in'}, s.start + s.d - .55);
+  }
+});
+tl.fromTo('#progress', {scaleX:0}, {scaleX:1, duration:TOTAL, ease:'none'}, 0);
+tl.to('#fadeBlack', {opacity:1, duration:1.2, ease:'power1.in'}, TOTAL - 1.2);
+tl.set({}, {}, TOTAL);
+
+// chapter label handled outside GSAP so seeking is fully deterministic
+const chapters = [];
+SCENES.forEach(s => {
+  const last = chapters[chapters.length-1];
+  if (last && last.ch === s.ch) last.end = s.start + s.d;
+  else chapters.push({ch:s.ch, start:s.start, end:s.start + s.d});
+});
+const chapEl = document.getElementById('chapter');
+let curCh = null;
+function updateChapter(time){
+  const c = chapters.find(c => time >= c.start && time < c.end) || chapters[chapters.length-1];
+  if (c !== curCh){
+    curCh = c;
+    if (c.ch){ const [n, label] = c.ch.split('|'); chapEl.innerHTML = '<b>'+n+'</b>'+label; }
+    else chapEl.innerHTML = '';
+  }
+  const a = Math.min(1, Math.max(0, (time - c.start - .2)/.6)) * Math.min(1, Math.max(0, (c.end - time)/.5));
+  chapEl.style.opacity = c.ch ? a : 0;
+}
+window.__seek = (time) => { tl.seek(time, true); updateChapter(time); };
+window.__seek(0);
+</script>
+</body>
+</html>
